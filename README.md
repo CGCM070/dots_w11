@@ -91,3 +91,58 @@ binding_modes:
 ## Recarga en caliente
 
 `Alt+Shift+R` — no hace falta reiniciar GlazeWM para aplicar cambios.
+
+---
+
+## Keybindings activos
+
+### Workspaces
+| Binding | Acción |
+|---------|--------|
+| `Alt+1..9` | Ir al workspace |
+| `Alt+Shift+1..9` | Mover ventana al workspace |
+
+### Navegación
+| Binding | Acción |
+|---------|--------|
+| `Alt+H` / `Alt+←` | Foco izquierda |
+| `Alt+J` / `Alt+↓` | Foco abajo |
+| `Alt+K` / `Alt+↑` | Foco arriba |
+| `Alt+L` / `Alt+→` | Foco derecha |
+| `Alt+Shift+H/J/K/L` | Mover ventana |
+| `Alt+Ctrl+H/J/K/L` | Redimensionar |
+
+### Estado de ventana
+| Binding | Acción |
+|---------|--------|
+| `Alt+W` | Cerrar ventana |
+| `Alt+F` | Fullscreen |
+| `Alt+Shift+Space` | Alternar flotante/tiling |
+| `Alt+Shift+F` | Explorador de archivos |
+| `Alt+Shift+V` | Cambiar dirección tiling |
+
+### Aplicaciones
+| Binding | Acción |
+|---------|--------|
+| `Alt+Space` | Flow Launcher |
+| `Alt+B` | Chrome |
+| `Alt+Shift+B` | Chrome incógnito |
+| `Alt+Shift+Return` | Windows Terminal |
+| `Alt+Shift+E` | Outlook |
+| `Alt+Shift+T` | Teams |
+| `Alt+Shift+C` | Claude Code (PowerShell) |
+| `Alt+Shift+O` | Terminal Ubuntu (WSL) |
+
+### Sistema GlazeWM
+| Binding | Acción |
+|---------|--------|
+| `Alt+Shift+R` | Recargar config |
+| `Alt+Shift+X` | Salir de GlazeWM |
+
+### Pendiente (requiere ejecutar bind.txt + reiniciar sesión)
+| Binding | Acción |
+|---------|--------|
+| `Win+Alt+C` | Claude Code (PowerShell) — alternativa |
+| `Win+Alt+O` | Terminal Ubuntu — alternativa |
+
+> `focus_follows_cursor: true` está activado pero no funciona con touchpad (bug GlazeWM #799).

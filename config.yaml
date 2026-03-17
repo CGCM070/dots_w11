@@ -131,10 +131,12 @@ keybindings:
   # ESTADOS DE VENTANA
   # ============================================
   - commands: ['close']
-    bindings: ['alt+q']
+    bindings: ['alt+w']
   - commands: ['toggle-floating --centered']
     bindings: ['alt+shift+space']
   - commands: ['toggle-fullscreen']
+    bindings: ['alt+f']
+  - commands: ['shell-exec explorer']
     bindings: ['alt+shift+f']
   - commands: ['toggle-tiling-direction']
     bindings: ['alt+shift+v']
@@ -144,16 +146,26 @@ keybindings:
   # ============================================
   - commands: ['shell-exec wt']
     bindings: ['alt+shift+return']
-  - commands: ['shell-exec firefox']
+  - commands: ['shell-exec C:\Users\cesar.castillo\AppData\Local\FlowLauncher\Flow.Launcher.exe']
+    bindings: ['alt+space']
+  - commands: ['shell-exec chrome']
+    bindings: ['alt+b']
+  - commands: ['shell-exec chrome --incognito']
     bindings: ['alt+shift+b']
-  - commands: ['shell-exec explorer']
+  - commands: ['shell-exec outlook']
     bindings: ['alt+shift+e']
-  - commands: ['shell-exec code']
-    bindings: ['alt+shift+c']
+
 
   # ============================================
   # UTILIDADES
   # ============================================
+  - commands: ['shell-exec wt -p "Windows PowerShell" powershell -NoExit -Command claude']
+    bindings: ['alt+shift+c']
+  - commands: ['shell-exec wt -p "Ubuntu"']
+    bindings: ['alt+shift+o']
+  - commands: ['shell-exec ms-teams']
+    bindings: ['alt+shift+t']
+
   - commands: ['wm-reload-config']
     bindings: ['alt+shift+r']
   - commands: ['wm-exit']
