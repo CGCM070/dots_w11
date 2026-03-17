@@ -1,0 +1,160 @@
+general:
+  startup_commands: ['shell-exec zebar']
+  shutdown_commands: ['shell-exec taskkill /IM zebar.exe /F']
+  focus_follows_cursor: true
+  hide_method: 'cloak'
+
+gaps:
+  inner_gap: '10px'
+  outer_gap:
+    top: '40px'
+    right: '10px'
+    bottom: '10px'
+    left: '10px'
+
+window_effects:
+  focused_window:
+    border:
+      enabled: true
+      color: '#89b4fa'
+      width: '2px'
+  other_windows:
+    border:
+      enabled: true
+      color: '#45475a'
+      width: '1px'
+
+window_behavior:
+  initial_state: 'tiling'
+  state_defaults:
+    floating:
+      centered: true
+      shown_on_top: false
+    fullscreen:
+      maximized: false
+      shown_on_top: false
+
+window_rules:
+  - commands: ['ignore']
+    match:
+      - window_process: { equals: 'zebar' }
+
+workspaces:
+  - name: '1'
+  - name: '2'
+  - name: '3'
+  - name: '4'
+  - name: '5'
+  - name: '6'
+  - name: '7'
+  - name: '8'
+  - name: '9'
+
+keybindings:
+  # ============================================
+  # WORKSPACES (Alt+1-9)
+  # ============================================
+  - commands: ['focus --workspace 1']
+    bindings: ['alt+1']
+  - commands: ['focus --workspace 2']
+    bindings: ['alt+2']
+  - commands: ['focus --workspace 3']
+    bindings: ['alt+3']
+  - commands: ['focus --workspace 4']
+    bindings: ['alt+4']
+  - commands: ['focus --workspace 5']
+    bindings: ['alt+5']
+  - commands: ['focus --workspace 6']
+    bindings: ['alt+6']
+  - commands: ['focus --workspace 7']
+    bindings: ['alt+7']
+  - commands: ['focus --workspace 8']
+    bindings: ['alt+8']
+  - commands: ['focus --workspace 9']
+    bindings: ['alt+9']
+
+  # Mover ventana a workspace y seguirla (Alt+Shift+1-9)
+  - commands: ['move --workspace 1', 'focus --workspace 1']
+    bindings: ['alt+shift+1']
+  - commands: ['move --workspace 2', 'focus --workspace 2']
+    bindings: ['alt+shift+2']
+  - commands: ['move --workspace 3', 'focus --workspace 3']
+    bindings: ['alt+shift+3']
+  - commands: ['move --workspace 4', 'focus --workspace 4']
+    bindings: ['alt+shift+4']
+  - commands: ['move --workspace 5', 'focus --workspace 5']
+    bindings: ['alt+shift+5']
+  - commands: ['move --workspace 6', 'focus --workspace 6']
+    bindings: ['alt+shift+6']
+  - commands: ['move --workspace 7', 'focus --workspace 7']
+    bindings: ['alt+shift+7']
+  - commands: ['move --workspace 8', 'focus --workspace 8']
+    bindings: ['alt+shift+8']
+  - commands: ['move --workspace 9', 'focus --workspace 9']
+    bindings: ['alt+shift+9']
+
+  # ============================================
+  # NAVEGACIÓN DIRECCIONAL (Alt+HJKL)
+  # ============================================
+  - commands: ['focus --direction left']
+    bindings: ['alt+h', 'alt+left']
+  - commands: ['focus --direction down']
+    bindings: ['alt+j', 'alt+down']
+  - commands: ['focus --direction up']
+    bindings: ['alt+k', 'alt+up']
+  - commands: ['focus --direction right']
+    bindings: ['alt+l', 'alt+right']
+
+  # Mover ventanas (Alt+Shift+HJKL)
+  - commands: ['move --direction left']
+    bindings: ['alt+shift+h', 'alt+shift+left']
+  - commands: ['move --direction down']
+    bindings: ['alt+shift+j', 'alt+shift+down']
+  - commands: ['move --direction up']
+    bindings: ['alt+shift+k', 'alt+shift+up']
+  - commands: ['move --direction right']
+    bindings: ['alt+shift+l', 'alt+shift+right']
+
+  # ============================================
+  # REDIMENSIONAR (Alt+Ctrl+HJKL)
+  # ============================================
+  - commands: ['resize --width -5%']
+    bindings: ['alt+ctrl+h']
+  - commands: ['resize --height -5%']
+    bindings: ['alt+ctrl+j']
+  - commands: ['resize --height +5%']
+    bindings: ['alt+ctrl+k']
+  - commands: ['resize --width +5%']
+    bindings: ['alt+ctrl+l']
+
+  # ============================================
+  # ESTADOS DE VENTANA
+  # ============================================
+  - commands: ['close']
+    bindings: ['alt+q']
+  - commands: ['toggle-floating --centered']
+    bindings: ['alt+shift+space']
+  - commands: ['toggle-fullscreen']
+    bindings: ['alt+shift+f']
+  - commands: ['toggle-tiling-direction']
+    bindings: ['alt+shift+v']
+
+  # ============================================
+  # LANZAR APLICACIONES
+  # ============================================
+  - commands: ['shell-exec wt']
+    bindings: ['alt+shift+return']
+  - commands: ['shell-exec firefox']
+    bindings: ['alt+shift+b']
+  - commands: ['shell-exec explorer']
+    bindings: ['alt+shift+e']
+  - commands: ['shell-exec code']
+    bindings: ['alt+shift+c']
+
+  # ============================================
+  # UTILIDADES
+  # ============================================
+  - commands: ['wm-reload-config']
+    bindings: ['alt+shift+r']
+  - commands: ['wm-exit']
+    bindings: ['alt+shift+x']
