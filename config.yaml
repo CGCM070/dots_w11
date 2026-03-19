@@ -41,14 +41,23 @@ window_rules:
 
 workspaces:
   - name: '1'
+    bind_to_monitor: 0
   - name: '2'
+    bind_to_monitor: 0
   - name: '3'
+    bind_to_monitor: 0
   - name: '4'
+    bind_to_monitor: 1
   - name: '5'
+    bind_to_monitor: 1
   - name: '6'
+    bind_to_monitor: 1
   - name: '7'
+    bind_to_monitor: 1
   - name: '8'
+    bind_to_monitor: 1
   - name: '9'
+    bind_to_monitor: 1
 
 keybindings:
   # ============================================
@@ -152,6 +161,8 @@ keybindings:
     bindings: ['alt+b']
   - commands: ['shell-exec chrome --incognito']
     bindings: ['alt+shift+b']
+  - commands: ['shell-exec chrome https://grok.com/']
+    bindings: ['alt+shift+g']
   - commands: ['shell-exec outlook']
     bindings: ['alt+shift+e']
 

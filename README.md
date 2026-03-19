@@ -100,7 +100,11 @@ window_rules:
       - window_process: { equals: 'zebar' }
 
 workspaces:
-  - name: '1'  # ... hasta 9
+  - name: '1'
+    bind_to_monitor: 0   # workspaces 1–3 → monitor 0
+  - name: '4'
+    bind_to_monitor: 1   # workspaces 4–9 → monitor 1
+  # ...
 ```
 
 ### Comandos disponibles en keybindings
@@ -155,6 +159,7 @@ workspaces:
 | `Alt+Space` | Flow Launcher |
 | `Alt+B` | Chrome |
 | `Alt+Shift+B` | Chrome incógnito |
+| `Alt+Shift+G` | Grok (Chrome) |
 | `Alt+Shift+Return` | Windows Terminal |
 | `Alt+Shift+F` | Explorador de archivos |
 | `Alt+Shift+E` | Outlook |
