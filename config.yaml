@@ -128,13 +128,13 @@ keybindings:
   # REDIMENSIONAR (Alt+Ctrl+HJKL)
   # ============================================
   - commands: ['resize --width -5%']
-    bindings: ['alt+ctrl+h']
+    bindings: ['alt+ctrl+h', 'alt+ctrl+left']
   - commands: ['resize --height -5%']
-    bindings: ['alt+ctrl+j']
+    bindings: ['alt+ctrl+j', 'alt+ctrl+down']
   - commands: ['resize --height +5%']
-    bindings: ['alt+ctrl+k']
+    bindings: ['alt+ctrl+k', 'alt+ctrl+up']
   - commands: ['resize --width +5%']
-    bindings: ['alt+ctrl+l']
+    bindings: ['alt+ctrl+l', 'alt+ctrl+right']
 
   # ============================================
   # ESTADOS DE VENTANA
@@ -172,8 +172,12 @@ keybindings:
   # ============================================
   - commands: ['shell-exec wt -p "Windows PowerShell" powershell -NoExit -Command claude']
     bindings: ['alt+shift+c']
+
+  # Dev session: nvim + claude juntos (GlazeWM los tilea automáticamente)
+  - commands: ['shell-exec C:\Users\cesar.castillo\bin\dev-session.cmd']
+    bindings: ['alt+shift+n']
   - commands: ['shell-exec wt -p "Ubuntu"']
-    bindings: ['alt+shift+o']
+    bindings: ['alt+ctrl+shift+enter']
   - commands: ['shell-exec ms-teams']
     bindings: ['alt+shift+t']
 
