@@ -170,7 +170,7 @@ keybindings:
   # ============================================
   # UTILIDADES
   # ============================================
-  - commands: ['shell-exec wt -p "Windows PowerShell" powershell -NoExit -Command claude']
+  - commands: ['shell-exec wt -p "Windows PowerShell" powershell -NoExit -Command "claude --chrome"']
     bindings: ['alt+shift+c']
 
   # Dev session: nvim + claude juntos (GlazeWM los tilea automáticamente)
