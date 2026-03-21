@@ -45,108 +45,102 @@ El agente debe verificar que estén instalados antes de proceder:
 
 ### Paso 1: Clonar el repositorio
 
-```powershell
-git clone git@github.com:CGCM070/dots_w11.git "$env:USERPROFILE\dots_w11"
+```cmd
+git clone git@github.com:CGCM070/dots_w11.git %USERPROFILE%\dots_w11
 ```
 
 ### Paso 2: Crear directorios destino (si no existen)
 
-```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.glzr\glazewm"
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.glzr\zebar"
-New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\nvim"
-New-Item -ItemType Directory -Force -Path "$env:APPDATA\FlowLauncher\Settings\Plugins"
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\bin"
+```cmd
+mkdir %USERPROFILE%\.glzr\glazewm 2>nul
+mkdir %USERPROFILE%\.glzr\zebar 2>nul
+mkdir %USERPROFILE%\bin 2>nul
+mkdir %APPDATA%\FlowLauncher\Settings 2>nul
 ```
+
+> **NOTA**: No crear el directorio `%LOCALAPPDATA%\nvim` porque se linkeará como carpeta completa.
 
 ### Paso 3: Eliminar configs existentes (si las hay)
 
 > **IMPORTANTE**: El agente debe preguntar al usuario antes de eliminar configuraciones existentes.
 
-```powershell
-# Solo si el usuario confirma
-Remove-Item -Recurse -Force "$env:USERPROFILE\.glzr\glazewm\config.yaml" -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force "$env:USERPROFILE\.glzr\zebar\*" -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force "$env:LOCALAPPDATA\nvim" -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force "$env:APPDATA\FlowLauncher\Settings\Settings.json" -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force "$env:APPDATA\FlowLauncher\Settings\Plugins" -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force "$env:USERPROFILE\bin\dev-session.cmd" -ErrorAction SilentlyContinue
+```cmd
+del %USERPROFILE%\.glzr\glazewm\config.yaml 2>nul
+del %USERPROFILE%\.glzr\zebar\settings.json 2>nul
+del %USERPROFILE%\.glzr\zebar\styles.css 2>nul
+del %USERPROFILE%\.glzr\zebar\with-glazewm.html 2>nul
+rmdir /s /q %LOCALAPPDATA%\nvim 2>nul
+del %APPDATA%\FlowLauncher\Settings\Settings.json 2>nul
+rmdir /s /q %APPDATA%\FlowLauncher\Settings\Plugins 2>nul
+del %USERPROFILE%\bin\dev-session.cmd 2>nul
 ```
 
 ### Paso 4: Crear symlinks
 
-> **NOTA**: Requiere PowerShell como Administrador, o tener habilitado el modo desarrollador en Windows 11 (Settings > System > For developers > Developer Mode ON).
+> **NOTA**: Requiere tener habilitado el modo desarrollador en Windows 11 (Settings > System > For developers > Developer Mode ON). Con el modo desarrollador activo se pueden crear symlinks sin privilegios de administrador usando `mklink`.
 
-```powershell
-$dots = "$env:USERPROFILE\dots_w11"
+```cmd
+set DOTS=%USERPROFILE%\dots_w11
 
-# GlazeWM - symlink del archivo config
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.glzr\glazewm\config.yaml" -Target "$dots\glazewm\config.yaml"
+:: GlazeWM - config
+mklink %USERPROFILE%\.glzr\glazewm\config.yaml %DOTS%\glazewm\config.yaml
 
-# Zebar - symlink de cada archivo
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.glzr\zebar\settings.json" -Target "$dots\zebar\settings.json"
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.glzr\zebar\styles.css" -Target "$dots\zebar\styles.css"
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.glzr\zebar\with-glazewm.html" -Target "$dots\zebar\with-glazewm.html"
+:: Zebar - archivos individuales
+mklink %USERPROFILE%\.glzr\zebar\settings.json %DOTS%\zebar\settings.json
+mklink %USERPROFILE%\.glzr\zebar\styles.css %DOTS%\zebar\styles.css
+mklink %USERPROFILE%\.glzr\zebar\with-glazewm.html %DOTS%\zebar\with-glazewm.html
 
-# Neovim - symlink de toda la carpeta
-Remove-Item -Recurse -Force "$env:LOCALAPPDATA\nvim" -ErrorAction SilentlyContinue
-New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\nvim" -Target "$dots\nvim"
+:: Neovim - carpeta completa
+mklink /D %LOCALAPPDATA%\nvim %DOTS%\nvim
 
-# Flow Launcher - symlink del settings principal
-New-Item -ItemType SymbolicLink -Path "$env:APPDATA\FlowLauncher\Settings\Settings.json" -Target "$dots\flow-launcher\Settings.json"
+:: Flow Launcher - settings principal
+mklink %APPDATA%\FlowLauncher\Settings\Settings.json %DOTS%\flow-launcher\Settings.json
 
-# Flow Launcher - symlink de la carpeta de plugins settings
-Remove-Item -Recurse -Force "$env:APPDATA\FlowLauncher\Settings\Plugins" -ErrorAction SilentlyContinue
-New-Item -ItemType SymbolicLink -Path "$env:APPDATA\FlowLauncher\Settings\Plugins" -Target "$dots\flow-launcher\Plugins"
+:: Flow Launcher - carpeta de plugins settings
+mklink /D %APPDATA%\FlowLauncher\Settings\Plugins %DOTS%\flow-launcher\Plugins
 
-# bin - symlink del script
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\bin\dev-session.cmd" -Target "$dots\bin\dev-session.cmd"
+:: bin - script
+mklink %USERPROFILE%\bin\dev-session.cmd %DOTS%\bin\dev-session.cmd
 ```
 
 ### Paso 5: Verificar
 
-```powershell
-# Verificar que los symlinks apuntan correctamente
-$symlinks = @(
-    "$env:USERPROFILE\.glzr\glazewm\config.yaml",
-    "$env:USERPROFILE\.glzr\zebar\settings.json",
-    "$env:LOCALAPPDATA\nvim",
-    "$env:APPDATA\FlowLauncher\Settings\Settings.json",
-    "$env:APPDATA\FlowLauncher\Settings\Plugins",
-    "$env:USERPROFILE\bin\dev-session.cmd"
-)
-foreach ($link in $symlinks) {
-    Get-Item $link | Select-Object FullName, Target
-}
+```cmd
+dir %USERPROFILE%\.glzr\glazewm\config.yaml
+dir %USERPROFILE%\.glzr\zebar\
+dir %LOCALAPPDATA%\nvim
+dir %APPDATA%\FlowLauncher\Settings\Settings.json
+dir %APPDATA%\FlowLauncher\Settings\Plugins
+dir %USERPROFILE%\bin\dev-session.cmd
 ```
+
+Cada archivo/carpeta debe mostrar `<SYMLINK>` o `<SYMLINKD>` en la salida.
 
 ### Paso 6: Recargar aplicaciones
 
-```powershell
-# Recargar GlazeWM (o usar Alt+Shift+R si ya está corriendo)
-# Reiniciar Flow Launcher
-Stop-Process -Name "Flow.Launcher" -ErrorAction SilentlyContinue
-Start-Process "$env:LOCALAPPDATA\FlowLauncher\Flow.Launcher.exe"
-# Neovim instalará plugins automáticamente al abrir (lazy.nvim)
-```
+- **GlazeWM**: Pulsar `Alt+Shift+R` para recargar la config
+- **Flow Launcher**: Cerrar y reabrir (o `taskkill /IM Flow.Launcher.exe /F` y volver a lanzar)
+- **Neovim**: Abrir normalmente, lazy.nvim instalará los plugins automáticamente en el primer arranque
 
 ### Mapa de symlinks (referencia rápida)
 
-| Origen (repo)                  | Destino (sistema)                                | Tipo    |
-|-------------------------------|--------------------------------------------------|---------|
-| `glazewm/config.yaml`        | `~\.glzr\glazewm\config.yaml`                   | Archivo |
-| `zebar/settings.json`        | `~\.glzr\zebar\settings.json`                   | Archivo |
-| `zebar/styles.css`           | `~\.glzr\zebar\styles.css`                      | Archivo |
-| `zebar/with-glazewm.html`    | `~\.glzr\zebar\with-glazewm.html`               | Archivo |
-| `nvim/`                      | `%LOCALAPPDATA%\nvim`                            | Carpeta |
-| `flow-launcher/Settings.json`| `%APPDATA%\FlowLauncher\Settings\Settings.json`  | Archivo |
-| `flow-launcher/Plugins/`     | `%APPDATA%\FlowLauncher\Settings\Plugins\`       | Carpeta |
-| `bin/dev-session.cmd`        | `~\bin\dev-session.cmd`                          | Archivo |
+| Origen (repo)                  | Destino (sistema)                                | Tipo     | Comando        |
+|-------------------------------|--------------------------------------------------|----------|----------------|
+| `glazewm/config.yaml`        | `~\.glzr\glazewm\config.yaml`                   | Archivo  | `mklink`       |
+| `zebar/settings.json`        | `~\.glzr\zebar\settings.json`                   | Archivo  | `mklink`       |
+| `zebar/styles.css`           | `~\.glzr\zebar\styles.css`                      | Archivo  | `mklink`       |
+| `zebar/with-glazewm.html`    | `~\.glzr\zebar\with-glazewm.html`               | Archivo  | `mklink`       |
+| `nvim/`                      | `%LOCALAPPDATA%\nvim`                            | Carpeta  | `mklink /D`    |
+| `flow-launcher/Settings.json`| `%APPDATA%\FlowLauncher\Settings\Settings.json`  | Archivo  | `mklink`       |
+| `flow-launcher/Plugins/`     | `%APPDATA%\FlowLauncher\Settings\Plugins\`       | Carpeta  | `mklink /D`    |
+| `bin/dev-session.cmd`        | `~\bin\dev-session.cmd`                          | Archivo  | `mklink`       |
 
 ### Notas para el agente
 
-- **No modificar archivos en los destinos directamente** — siempre editar dentro del repo y los symlinks propagarán los cambios.
+- **Usar `mklink` de cmd**, no `New-Item -ItemType SymbolicLink` de PowerShell (falla sin admin aunque el modo desarrollador esté activo).
+- **No modificar archivos en los destinos directamente** — siempre editar dentro del repo (`~/dots_w11/`) y los symlinks propagarán los cambios.
 - Si GlazeWM no detecta cambios tras crear el symlink, recargar con `Alt+Shift+R`.
 - Neovim instalará plugins automáticamente al abrir por primera vez (lazy.nvim).
-- El script `dev-session.cmd` abre nvim y Claude Code (con --chrome) en ventanas tileadas side-by-side.
+- El script `dev-session.cmd` abre nvim y Claude Code (con `--chrome`) en ventanas tileadas side-by-side.
 - Flow Launcher debe reiniciarse tras aplicar los symlinks para que tome la nueva configuración.
+- Para ejecutar `mklink` desde bash (Git Bash), usar: `cmd //c mklink "destino" "origen"`.
