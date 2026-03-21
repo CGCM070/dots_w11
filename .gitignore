@@ -1,0 +1,5 @@
+errors.log
+*.bak
+History.json
+UserSelectedRecord.json
+MultipleTopMostRecord.json
