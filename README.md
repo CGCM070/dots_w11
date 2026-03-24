@@ -1,5 +1,8 @@
 # dots_w11
 
+> **AGENTES IA — LEER ANTES DE EDITAR CUALQUIER ARCHIVO**
+> Los archivos de este repositorio son la fuente de verdad, pero sus rutas de sistema (p.ej. `~\.glzr\glazewm\config.yaml`) son **symlinks creados con `mklink` de cmd** que apuntan aquí. Editar el destino del symlink edita este repo. Si encuentras un archivo fuera de `dots_w11/` que coincide con alguna entrada del [mapa de symlinks](#mapa-de-symlinks-referencia-rápida), **edita directamente el archivo dentro de `dots_w11/`**, no el destino enlazado. Nunca asumir que son copias independientes.
+
 Dotfiles para Windows 11. Contiene configuraciones de GlazeWM, Zebar, Neovim, Flow Launcher y scripts utilitarios.
 
 ## Estructura
@@ -137,8 +140,10 @@ Cada archivo/carpeta debe mostrar `<SYMLINK>` o `<SYMLINKD>` en la salida.
 
 ### Notas para el agente
 
+- **Leer este README antes de editar cualquier archivo de configuración** — los archivos del sistema son symlinks, la fuente real está en este repo.
 - **Usar `mklink` de cmd**, no `New-Item -ItemType SymbolicLink` de PowerShell (falla sin admin aunque el modo desarrollador esté activo).
 - **No modificar archivos en los destinos directamente** — siempre editar dentro del repo (`~/dots_w11/`) y los symlinks propagarán los cambios.
+- Los symlinks se crearon con **cmd** (`mklink`), no con PowerShell ni con Git Bash directamente. Para crearlos desde bash usar: `cmd //c mklink "destino" "origen"`.
 - Si GlazeWM no detecta cambios tras crear el symlink, recargar con `Alt+Shift+R`.
 - Neovim instalará plugins automáticamente al abrir por primera vez (lazy.nvim).
 - El script `dev-session.cmd` abre nvim y Claude Code (con `--chrome`) en ventanas tileadas side-by-side.
