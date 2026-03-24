@@ -3,7 +3,7 @@
 > **AGENTES IA — LEER ANTES DE EDITAR CUALQUIER ARCHIVO**
 > Los archivos de este repositorio son la fuente de verdad, pero sus rutas de sistema (p.ej. `~\.glzr\glazewm\config.yaml`) son **symlinks creados con `mklink` de cmd** que apuntan aquí. Editar el destino del symlink edita este repo. Si encuentras un archivo fuera de `dots_w11/` que coincide con alguna entrada del [mapa de symlinks](#mapa-de-symlinks-referencia-rápida), **edita directamente el archivo dentro de `dots_w11/`**, no el destino enlazado. Nunca asumir que son copias independientes.
 
-Dotfiles para Windows 11. Contiene configuraciones de GlazeWM, Zebar, Neovim, Flow Launcher y scripts utilitarios.
+Dotfiles para Windows 11. Contiene configuraciones de GlazeWM, Zebar, Neovim, Flow Launcher, Windows Terminal, PowerShell 7 y scripts utilitarios.
 
 ## Estructura
 
@@ -24,8 +24,13 @@ dots_w11/
 │   ├── Settings.json
 │   └── Plugins/
 │       └── */Settings.json
+├── windows-terminal/       # Windows Terminal
+│   └── settings.json
+├── powershell/             # PowerShell 7 profile
+│   └── Microsoft.PowerShell_profile.ps1
 ├── bin/                    # Scripts utilitarios
-│   └── dev-session.cmd
+│   ├── dev-session.cmd
+│   └── link-wt.cmd
 ├── .gitignore
 └── README.md
 ```
@@ -43,6 +48,7 @@ El agente debe verificar que estén instalados antes de proceder:
 - [Zebar](https://github.com/glzr-io/zebar) (status bar para GlazeWM)
 - [Neovim](https://neovim.io/) (>= 0.9)
 - [Windows Terminal](https://aka.ms/terminal)
+- [PowerShell 7](https://github.com/PowerShell/PowerShell) (`winget install Microsoft.PowerShell`)
 - [Flow Launcher](https://www.flowlauncher.com/)
 - [Google Chrome](https://www.google.com/chrome/)
 
@@ -59,6 +65,7 @@ mkdir %USERPROFILE%\.glzr\glazewm 2>nul
 mkdir %USERPROFILE%\.glzr\zebar 2>nul
 mkdir %USERPROFILE%\bin 2>nul
 mkdir %APPDATA%\FlowLauncher\Settings 2>nul
+mkdir %USERPROFILE%\Documents\PowerShell 2>nul
 ```
 
 > **NOTA**: No crear el directorio `%LOCALAPPDATA%\nvim` porque se linkeará como carpeta completa.
@@ -76,6 +83,9 @@ rmdir /s /q %LOCALAPPDATA%\nvim 2>nul
 del %APPDATA%\FlowLauncher\Settings\Settings.json 2>nul
 rmdir /s /q %APPDATA%\FlowLauncher\Settings\Plugins 2>nul
 del %USERPROFILE%\bin\dev-session.cmd 2>nul
+del %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 2>nul
+:: Windows Terminal: cerrar WT antes de eliminar
+del "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" 2>nul
 ```
 
 ### Paso 4: Crear symlinks
@@ -102,8 +112,15 @@ mklink %APPDATA%\FlowLauncher\Settings\Settings.json %DOTS%\flow-launcher\Settin
 :: Flow Launcher - carpeta de plugins settings
 mklink /D %APPDATA%\FlowLauncher\Settings\Plugins %DOTS%\flow-launcher\Plugins
 
-:: bin - script
+:: bin - scripts
 mklink %USERPROFILE%\bin\dev-session.cmd %DOTS%\bin\dev-session.cmd
+
+:: PowerShell 7 - perfil
+mklink %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 %DOTS%\powershell\Microsoft.PowerShell_profile.ps1
+
+:: Windows Terminal - IMPORTANTE: cerrar WT antes de ejecutar este mklink
+mklink "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" "%DOTS%\windows-terminal\settings.json"
+:: Alternativamente ejecutar: bin\link-wt.cmd (recuerda cerrar WT primero)
 ```
 
 ### Paso 5: Verificar
@@ -115,6 +132,8 @@ dir %LOCALAPPDATA%\nvim
 dir %APPDATA%\FlowLauncher\Settings\Settings.json
 dir %APPDATA%\FlowLauncher\Settings\Plugins
 dir %USERPROFILE%\bin\dev-session.cmd
+dir %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+dir "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 ```
 
 Cada archivo/carpeta debe mostrar `<SYMLINK>` o `<SYMLINKD>` en la salida.
@@ -137,6 +156,8 @@ Cada archivo/carpeta debe mostrar `<SYMLINK>` o `<SYMLINKD>` en la salida.
 | `flow-launcher/Settings.json`| `%APPDATA%\FlowLauncher\Settings\Settings.json`  | Archivo  | `mklink`       |
 | `flow-launcher/Plugins/`     | `%APPDATA%\FlowLauncher\Settings\Plugins\`       | Carpeta  | `mklink /D`    |
 | `bin/dev-session.cmd`        | `~\bin\dev-session.cmd`                          | Archivo  | `mklink`       |
+| `powershell/Microsoft.PowerShell_profile.ps1` | `~\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` | Archivo | `mklink` |
+| `windows-terminal/settings.json` | `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json` | Archivo | `mklink` (cerrar WT antes) |
 
 ### Notas para el agente
 
@@ -146,6 +167,8 @@ Cada archivo/carpeta debe mostrar `<SYMLINK>` o `<SYMLINKD>` en la salida.
 - Los symlinks se crearon con **cmd** (`mklink`), no con PowerShell ni con Git Bash directamente. Para crearlos desde bash usar: `cmd //c mklink "destino" "origen"`.
 - Si GlazeWM no detecta cambios tras crear el symlink, recargar con `Alt+Shift+R`.
 - Neovim instalará plugins automáticamente al abrir por primera vez (lazy.nvim).
-- El script `dev-session.cmd` abre nvim y Claude Code (con `--chrome`) en ventanas tileadas side-by-side.
+- El script `dev-session.cmd` abre nvim y Claude Code (con `--chrome`) en ventanas tileadas side-by-side usando PowerShell 7 (`pwsh`).
+- El script `bin/link-wt.cmd` crea el symlink de Windows Terminal — ejecutar con WT cerrado.
 - Flow Launcher debe reiniciarse tras aplicar los symlinks para que tome la nueva configuración.
 - Para ejecutar `mklink` desde bash (Git Bash), usar: `cmd //c mklink "destino" "origen"`.
+- **Windows Terminal** recrea `settings.json` automáticamente si se elimina mientras está abierto. Siempre cerrar WT antes de crear su symlink.
