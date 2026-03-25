@@ -107,8 +107,8 @@ body,
 .binding-mode,
 .tiling-direction,
 .paused-button,
-.network,
 .cpu,
+.memory,
 .battery {
   margin-right: 12px;
 }
@@ -163,7 +163,8 @@ body,
   margin-right: 4px;
 }
 
-.cpu .high-usage {
+.cpu .high-usage,
+.memory .high-usage {
   color: #900029;
 }
 

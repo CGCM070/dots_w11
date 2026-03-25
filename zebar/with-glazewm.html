@@ -26,9 +26,9 @@
       import * as zebar from 'https://esm.sh/zebar@3.0';
 
       const providers = zebar.createProviderGroup({
-        network: { type: 'network' },
         glazewm: { type: 'glazewm' },
         cpu: { type: 'cpu' },
+        memory: { type: 'memory' },
         battery: { type: 'battery' },
       });
 
@@ -40,38 +40,6 @@
         useEffect(() => {
           providers.onOutput(() => setOutput(providers.outputMap));
         }, []);
-
-        // Get icon to show for current network status.
-        function getNetworkIcon(networkOutput) {
-          switch (networkOutput.defaultInterface?.type) {
-            case 'ethernet':
-              return <i className="nf nf-md-ethernet_cable"></i>;
-            case 'proprietary_virtual':
-              return <i className="nf nf-md-shield_lock_outline"></i>;
-            case 'wifi':
-              if (networkOutput.defaultGateway?.signalStrength >= 80) {
-                return <i className="nf nf-md-wifi_strength_4"></i>;
-              } else if (
-                networkOutput.defaultGateway?.signalStrength >= 65
-              ) {
-                return <i className="nf nf-md-wifi_strength_3"></i>;
-              } else if (
-                networkOutput.defaultGateway?.signalStrength >= 40
-              ) {
-                return <i className="nf nf-md-wifi_strength_2"></i>;
-              } else if (
-                networkOutput.defaultGateway?.signalStrength >= 25
-              ) {
-                return <i className="nf nf-md-wifi_strength_1"></i>;
-              } else {
-                return <i className="nf nf-md-wifi_strength_outline"></i>;
-              }
-            default:
-              return (
-                <i className="nf nf-md-wifi_strength_off_outline"></i>
-              );
-          }
-        }
 
         // Get icon to show for how much of the battery is charged.
         function getBatteryIcon(batteryOutput) {
@@ -148,13 +116,6 @@
                 </>
               )}
 
-              {output.network && (
-                <div className="network">
-                  {getNetworkIcon(output.network)}
-                  {output.network.defaultGateway?.ssid}
-                </div>
-              )}
-
               {output.cpu && (
                 <div className="cpu">
                   <i className="nf nf-oct-cpu"></i>
@@ -164,6 +125,19 @@
                     className={output.cpu.usage > 85 ? 'high-usage' : ''}
                   >
                     {Math.round(output.cpu.usage)}%
+                  </span>
+                </div>
+              )}
+
+              {output.memory && (
+                <div className="memory">
+                  <i className="nf nf-fae-chip"></i>
+
+                  {/* Change the text color if the memory usage is high. */}
+                  <span
+                    className={output.memory.usage > 85 ? 'high-usage' : ''}
+                  >
+                    {Math.round(output.memory.usage)}%
                   </span>
                 </div>
               )}
