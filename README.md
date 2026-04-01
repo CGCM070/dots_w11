@@ -48,7 +48,7 @@ El agente debe verificar que estén instalados antes de proceder:
 - [Zebar](https://github.com/glzr-io/zebar) (status bar para GlazeWM)
 - [Neovim](https://neovim.io/) (>= 0.9)
 - [Windows Terminal](https://aka.ms/terminal)
-- [PowerShell 7](https://github.com/PowerShell/PowerShell) (`winget install Microsoft.PowerShell`)
+- [PowerShell 7](https://github.com/PowerShell/PowerShell) (`winget install Microsoft.PowerShell`) — ver [sección PowerShell 7](#powershell-7) para detalles
 - [Flow Launcher](https://www.flowlauncher.com/)
 - [Google Chrome](https://www.google.com/chrome/)
 
@@ -144,6 +144,47 @@ Cada archivo/carpeta debe mostrar `<SYMLINK>` o `<SYMLINKD>` en la salida.
 - **Flow Launcher**: Cerrar y reabrir (o `taskkill /IM Flow.Launcher.exe /F` y volver a lanzar)
 - **Neovim**: Abrir normalmente, lazy.nvim instalará los plugins automáticamente en el primer arranque
 
+### PowerShell 7
+
+PowerShell 7 (`pwsh`) es el shell por defecto en Windows Terminal. Su perfil se ubica en una ruta distinta a Windows PowerShell 5:
+
+| Versión | Ruta del perfil |
+|---|---|
+| PowerShell 5 (`powershell.exe`) | `~\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1` |
+| **PowerShell 7** (`pwsh.exe`) | `~\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` |
+
+Este repo gestiona el perfil de **PowerShell 7**. El symlink apunta desde la ruta del sistema al archivo en `dots_w11/powershell/`.
+
+#### Instalación
+
+```cmd
+winget install Microsoft.PowerShell
+```
+
+Tras instalar, PowerShell 7 aparece automáticamente como perfil en Windows Terminal. Para configurarlo como perfil por defecto, se establece `defaultProfile` en `windows-terminal/settings.json` con el GUID de PowerShellCore (`{574e775e-4f2a-5b96-ac1e-a2962a402336}`), lo cual ya está hecho en este repo.
+
+#### Qué configura el perfil
+
+**PSReadLine** (módulo incluido en PS7, no requiere instalación):
+- Predicciones desde historial con vista de lista (`PredictionSource History`, `PredictionViewStyle ListView`)
+- Flechas arriba/abajo filtran historial por lo ya escrito (`HistorySearchBackward`/`HistorySearchForward`)
+- Tab despliega menú de opciones (`MenuComplete`)
+- Colores de sintaxis personalizados: comandos (amarillo), parámetros (gris), strings (verde), errores (rojo), comentarios (verde oscuro), keywords (cyan)
+
+**Clipboard Monitor** (notificación al copiar):
+- Muestra un toast oscuro semi-transparente ("Copiado ✓") en la esquina inferior derecha durante 1.5 segundos cada vez que el clipboard cambia
+- Usa la Win32 API `AddClipboardFormatListener` (event-driven, 0% CPU en reposo)
+- Corre en un runspace de fondo con thread STA (necesario para WinForms)
+- **Detecta cambios de clipboard a nivel de sistema** (no solo dentro de la terminal)
+- Dependencias: `System.Windows.Forms` y `System.Drawing` — ambas incluidas en el .NET Desktop Runtime que viene con PS7 en Windows, **no requiere instalar nada extra**
+- Para desactivar: eliminar el bloque entre `# Clipboard Monitor` y `# Fin Clipboard Monitor` en el perfil
+
+#### Notas técnicas
+
+- PS7 usa .NET 8+ internamente. La compilación C# en el perfil requiere resolver assemblies de forma dinámica (las DLLs están fraccionadas en .NET Core vs .NET Framework). El perfil lo maneja automáticamente buscando en el directorio de instalación de `pwsh`.
+- Si el clipboard monitor falla por cualquier razón, se captura silenciosamente (`try/catch`) y no afecta al funcionamiento normal de la terminal.
+- El monitor se inicia con `BeginInvoke()` (asíncrono) — no añade delay perceptible al arranque de la terminal.
+
 ### Mapa de symlinks (referencia rápida)
 
 | Origen (repo)                  | Destino (sistema)                                | Tipo     | Comando        |
@@ -167,7 +208,6 @@ Cada archivo/carpeta debe mostrar `<SYMLINK>` o `<SYMLINKD>` en la salida.
 - Los symlinks se crearon con **cmd** (`mklink`), no con PowerShell ni con Git Bash directamente. Para crearlos desde bash usar: `cmd //c mklink "destino" "origen"`.
 - Si GlazeWM no detecta cambios tras crear el symlink, recargar con `Alt+Shift+R`.
 - Neovim instalará plugins automáticamente al abrir por primera vez (lazy.nvim).
-- **Clipboard Monitor**: El perfil de PowerShell incluye un monitor de clipboard que muestra un toast ("Copiado ✓") en la esquina inferior derecha durante 1.5s cada vez que el clipboard cambia. Usa la Win32 API `AddClipboardFormatListener` (event-driven, 0% CPU en reposo). **Importante**: detecta cambios de clipboard a nivel de sistema, no solo dentro de la terminal. Corre en un runspace de fondo (STA). Para desactivarlo, eliminar el bloque entre `# Clipboard Monitor` y `# Fin Clipboard Monitor` en el perfil.
 - El script `dev-session.cmd` abre nvim y Claude Code (con `--chrome`) en ventanas tileadas side-by-side usando PowerShell 7 (`pwsh`).
 - El script `bin/link-wt.cmd` crea el symlink de Windows Terminal — ejecutar con WT cerrado.
 - Flow Launcher debe reiniciarse tras aplicar los symlinks para que tome la nueva configuración.
