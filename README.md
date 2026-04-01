@@ -26,7 +26,7 @@ dots_w11/
 │       └── */Settings.json
 ├── windows-terminal/       # Windows Terminal
 │   └── settings.json
-├── powershell/             # PowerShell 7 profile
+├── powershell/             # PowerShell 7 profile + clipboard monitor
 │   └── Microsoft.PowerShell_profile.ps1
 ├── bin/                    # Scripts utilitarios
 │   ├── dev-session.cmd
@@ -167,6 +167,7 @@ Cada archivo/carpeta debe mostrar `<SYMLINK>` o `<SYMLINKD>` en la salida.
 - Los symlinks se crearon con **cmd** (`mklink`), no con PowerShell ni con Git Bash directamente. Para crearlos desde bash usar: `cmd //c mklink "destino" "origen"`.
 - Si GlazeWM no detecta cambios tras crear el symlink, recargar con `Alt+Shift+R`.
 - Neovim instalará plugins automáticamente al abrir por primera vez (lazy.nvim).
+- **Clipboard Monitor**: El perfil de PowerShell incluye un monitor de clipboard que muestra un toast ("Copiado ✓") en la esquina inferior derecha durante 1.5s cada vez que el clipboard cambia. Usa la Win32 API `AddClipboardFormatListener` (event-driven, 0% CPU en reposo). **Importante**: detecta cambios de clipboard a nivel de sistema, no solo dentro de la terminal. Corre en un runspace de fondo (STA). Para desactivarlo, eliminar el bloque entre `# Clipboard Monitor` y `# Fin Clipboard Monitor` en el perfil.
 - El script `dev-session.cmd` abre nvim y Claude Code (con `--chrome`) en ventanas tileadas side-by-side usando PowerShell 7 (`pwsh`).
 - El script `bin/link-wt.cmd` crea el symlink de Windows Terminal — ejecutar con WT cerrado.
 - Flow Launcher debe reiniciarse tras aplicar los symlinks para que tome la nueva configuración.
