@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "effortLevel": "high",
+  "autoUpdatesChannel": "latest",
+  "voiceEnabled": true,
+  "permissions": {
+    "allow": ["Read", "Glob", "Grep", "Bash(git *)"]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "echo \"$(basename \"$PWD\") | $(git branch --show-current 2>/dev/null || echo 'no git')\"",
+    "refreshInterval": 10
+  }
+}

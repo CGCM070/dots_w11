@@ -3,7 +3,7 @@
 > **AGENTES IA — LEER ANTES DE EDITAR CUALQUIER ARCHIVO**
 > Los archivos de este repositorio son la fuente de verdad, pero sus rutas de sistema (p.ej. `~\.glzr\glazewm\config.yaml`) son **symlinks creados con `mklink` de cmd** que apuntan aquí. Editar el destino del symlink edita este repo. Si encuentras un archivo fuera de `dots_w11/` que coincide con alguna entrada del [mapa de symlinks](#mapa-de-symlinks-referencia-rápida), **edita directamente el archivo dentro de `dots_w11/`**, no el destino enlazado. Nunca asumir que son copias independientes.
 
-Dotfiles para Windows 11. Contiene configuraciones de GlazeWM, Zebar, Neovim, Flow Launcher, Windows Terminal, PowerShell 7 y scripts utilitarios.
+Dotfiles para Windows 11. Contiene configuraciones de GlazeWM, Zebar, Neovim, Flow Launcher, Windows Terminal, PowerShell 7, Claude Code y scripts utilitarios.
 
 ## Estructura
 
@@ -28,6 +28,8 @@ dots_w11/
 │   └── settings.json
 ├── powershell/             # PowerShell 7 profile + clipboard monitor
 │   └── Microsoft.PowerShell_profile.ps1
+├── claude/                 # Claude Code CLI
+│   └── settings.json
 ├── bin/                    # Scripts utilitarios
 │   ├── dev-session.cmd
 │   └── link-wt.cmd
@@ -64,6 +66,7 @@ git clone git@github.com:CGCM070/dots_w11.git %USERPROFILE%\dots_w11
 mkdir %USERPROFILE%\.glzr\glazewm 2>nul
 mkdir %USERPROFILE%\.glzr\zebar 2>nul
 mkdir %USERPROFILE%\bin 2>nul
+mkdir %USERPROFILE%\.claude 2>nul
 mkdir %APPDATA%\FlowLauncher\Settings 2>nul
 mkdir %USERPROFILE%\Documents\PowerShell 2>nul
 ```
@@ -83,6 +86,7 @@ rmdir /s /q %LOCALAPPDATA%\nvim 2>nul
 del %APPDATA%\FlowLauncher\Settings\Settings.json 2>nul
 rmdir /s /q %APPDATA%\FlowLauncher\Settings\Plugins 2>nul
 del %USERPROFILE%\bin\dev-session.cmd 2>nul
+del %USERPROFILE%\.claude\settings.json 2>nul
 del %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 2>nul
 :: Windows Terminal: cerrar WT antes de eliminar
 del "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" 2>nul
@@ -115,6 +119,9 @@ mklink /D %APPDATA%\FlowLauncher\Settings\Plugins %DOTS%\flow-launcher\Plugins
 :: bin - scripts
 mklink %USERPROFILE%\bin\dev-session.cmd %DOTS%\bin\dev-session.cmd
 
+:: Claude Code - settings
+mklink %USERPROFILE%\.claude\settings.json %DOTS%\claude\settings.json
+
 :: PowerShell 7 - perfil
 mklink %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 %DOTS%\powershell\Microsoft.PowerShell_profile.ps1
 
@@ -132,6 +139,7 @@ dir %LOCALAPPDATA%\nvim
 dir %APPDATA%\FlowLauncher\Settings\Settings.json
 dir %APPDATA%\FlowLauncher\Settings\Plugins
 dir %USERPROFILE%\bin\dev-session.cmd
+dir %USERPROFILE%\.claude\settings.json
 dir %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 dir "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 ```
@@ -185,6 +193,18 @@ Tras instalar, PowerShell 7 aparece automáticamente como perfil en Windows Term
 - Si el clipboard monitor falla por cualquier razón, se captura silenciosamente (`try/catch`) y no afecta al funcionamiento normal de la terminal.
 - El monitor se inicia con `BeginInvoke()` (asíncrono) — no añade delay perceptible al arranque de la terminal.
 
+### Claude Code
+
+Claude Code es el CLI oficial de Anthropic para programar con Claude. El `settings.json` configura:
+
+- **language** — respuestas en español
+- **effortLevel** — nivel de esfuerzo alto para respuestas más completas
+- **permissions.allow** — auto-aprueba herramientas de solo lectura (`Read`, `Glob`, `Grep`, `Bash(git *)`) para no tener que confirmar cada acción
+- **statusLine** — barra inferior que muestra el nombre del proyecto y la rama git activa, se actualiza cada 10 segundos
+- **voiceEnabled** — modo voz (hold-to-talk)
+
+El archivo se ubica en `~\.claude\settings.json`.
+
 ### Mapa de symlinks (referencia rápida)
 
 | Origen (repo)                  | Destino (sistema)                                | Tipo     | Comando        |
@@ -197,6 +217,7 @@ Tras instalar, PowerShell 7 aparece automáticamente como perfil en Windows Term
 | `flow-launcher/Settings.json`| `%APPDATA%\FlowLauncher\Settings\Settings.json`  | Archivo  | `mklink`       |
 | `flow-launcher/Plugins/`     | `%APPDATA%\FlowLauncher\Settings\Plugins\`       | Carpeta  | `mklink /D`    |
 | `bin/dev-session.cmd`        | `~\bin\dev-session.cmd`                          | Archivo  | `mklink`       |
+| `claude/settings.json`      | `~\.claude\settings.json`                        | Archivo  | `mklink`       |
 | `powershell/Microsoft.PowerShell_profile.ps1` | `~\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` | Archivo | `mklink` |
 | `windows-terminal/settings.json` | `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json` | Archivo | `mklink` (cerrar WT antes) |
 
