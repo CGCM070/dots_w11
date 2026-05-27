@@ -4,7 +4,30 @@
   "autoUpdatesChannel": "latest",
   "voiceEnabled": true,
   "permissions": {
-    "allow": ["Read", "Glob", "Grep", "Bash(git *)"]
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(git *)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(wc:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(Get-Location *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(Get-Item *)",
+      "PowerShell(Test-Path *)",
+      "PowerShell($psVersionTable)",
+      "Bash(claude mcp:*)",
+      "Bash(claude --version)",
+      "Bash(ssh -T -o BatchMode=yes -o ConnectTimeout=8 git@github.com)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)"
+    ]
   },
   "statusLine": {
     "type": "command",
