@@ -5,7 +5,11 @@
 
 Dotfiles para Windows 11. Contiene configuraciones de GlazeWM, Zebar, Neovim, Flow Launcher, Windows Terminal, PowerShell 7 y scripts utilitarios.
 
-> **NOTA sobre Claude Code**: La configuración de Claude Code (`~\.claude\settings.json`) **NO se gestiona en este repo a propósito**. Es un archivo libre e independiente en cada máquina, no un symlink. No lo enlaces ni lo copies aquí.
+> **NOTA sobre Claude Code**: `claude/` es una **copia de respaldo, NO un symlink**. Los archivos vivos
+> (`~\.claude\settings.json` y `~\.claude\settings.local.json`) son libres e independientes en cada máquina:
+> Claude Code los reescribe solo cada vez que apruebas un permiso con "no preguntes más". **No los enlaces.**
+> Para actualizar el respaldo, copia de `~\.claude\` a `claude\` a mano. Si el respaldo y el archivo vivo
+> divergen, gana el archivo vivo.
 
 ## Estructura
 
@@ -30,6 +34,9 @@ dots_w11/
 │   └── settings.json
 ├── powershell/             # PowerShell 7 profile + clipboard monitor
 │   └── Microsoft.PowerShell_profile.ps1
+├── claude/                 # Claude Code CLI (respaldo, NO symlink)
+│   ├── settings.json
+│   └── settings.local.json
 ├── bin/                    # Scripts utilitarios
 │   ├── dev-session.cmd
 │   └── link-wt.cmd
@@ -189,9 +196,21 @@ Tras instalar, PowerShell 7 aparece automáticamente como perfil en Windows Term
 
 ### Claude Code
 
-**Fuera del alcance de este repo, a propósito.** `~\.claude\settings.json` es un archivo libre e
-independiente en cada máquina: no se versiona aquí, no se enlaza y no se copia. Ver la nota del
-principio del README.
+`claude/` guarda un **respaldo** de la configuración del CLI. No aparece en el mapa de symlinks y
+**no debe enlazarse**: Claude Code reescribe estos archivos por su cuenta cada vez que apruebas un
+permiso con "no preguntes más", así que un symlink metería ruido constante en el repo.
+
+- **`settings.json`** — configuración personal y permisos base. `language` (español), `effortLevel`,
+  `statusLine` (proyecto · rama git · modelo · % de contexto), `voice` (hold-to-talk), tema y
+  notificaciones. En `permissions`: `allow` para lectura, git, búsqueda y los MCP en uso; `ask` para
+  `rm -rf`; y `deny` sobre `.env` y sobre los propios archivos de permisos, para que ningún agente
+  pueda auto-concederse accesos.
+- **`settings.local.json`** — permisos de la máquina, sin secretos.
+
+Los permisos específicos de un proyecto **no van aquí**: viven en el `.claude/` de cada repo.
+
+Para restaurar en una máquina nueva: copiar ambos archivos a `~\.claude\` y revisar las rutas
+absolutas de las reglas `deny`, que llevan el nombre de usuario dentro.
 
 ### Mapa de symlinks (referencia rápida)
 

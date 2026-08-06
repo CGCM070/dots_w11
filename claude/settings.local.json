@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude --version)",
+      "Bash(claude mcp:*)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)",
+      "Bash(nvim --version)",
+      "Bash(winget list:*)",
+      "Bash(netstat -ano)",
+      "Bash(tasklist)",
+      "Bash(ssh -T -o BatchMode=yes -o ConnectTimeout=8 git@github.com)",
+      "Bash(ssh -T -o BatchMode=yes -o ConnectTimeout=8 git@gitlabidi.arelance.com)",
+      "PowerShell(nslookup *)",
+      "PowerShell(Get-CimInstance *)",
+      "PowerShell(wsl -l -v)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "WebFetch(domain:claude.ai)",
+      "WebFetch(domain:support.anthropic.com)",
+      "WebFetch(domain:support.claude.com)",
+      "WebFetch(domain:status.anthropic.com)",
+      "WebFetch(domain:status.claude.com)",
+      "WebFetch(domain:support.microsoft.com)",
+      "WebFetch(domain:bitwarden.com)",
+      "WebFetch(domain:vaultwarden.discourse.group)",
+      "WebFetch(domain:moodle.org)",
+      "WebFetch(domain:www.arelance.com)",
+      "WebFetch(domain:insertaonce.arelance.com)",
+      "WebFetch(domain:www.ilunionconsultoria.com)",
+      "WebFetch(domain:www.teams-pro.com)",
+      "WebFetch(domain:docs.witivio.com)",
+      "mcp__trello__create_label"
+    ],
+    "ask": [
+      "Bash(winget install:*)"
+    ]
+  },
+  "skillOverrides": {
+    "duck": "on"
+  }
+}
