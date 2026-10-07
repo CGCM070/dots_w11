@@ -6,7 +6,7 @@
 Dotfiles para Windows 11. Contiene configuraciones de GlazeWM, Zebar, Neovim, Flow Launcher, Windows Terminal, PowerShell 7 y scripts utilitarios.
 
 > **NOTA sobre Claude Code**: `claude/` es una **copia de respaldo, NO un symlink**. Los archivos vivos
-> (`~\.claude\settings.json` y `~\.claude\settings.local.json`) son libres e independientes en cada máquina:
+> (`~\.claude\settings.json`, `~\.claude\settings.local.json` y `~\.claude\statusline.sh`) son libres e independientes en cada máquina:
 > Claude Code los reescribe solo cada vez que apruebas un permiso con "no preguntes más". **No los enlaces.**
 > Para actualizar el respaldo, copia de `~\.claude\` a `claude\` a mano. Si el respaldo y el archivo vivo
 > divergen, gana el archivo vivo.
@@ -201,15 +201,25 @@ Tras instalar, PowerShell 7 aparece automáticamente como perfil en Windows Term
 permiso con "no preguntes más", así que un symlink metería ruido constante en el repo.
 
 - **`settings.json`** — configuración personal y permisos base. `language` (español), `effortLevel`,
-  `statusLine` (proyecto · rama git · modelo · % de contexto), `voice` (hold-to-talk), tema y
-  notificaciones. En `permissions`: `allow` para lectura, git, búsqueda y los MCP en uso; `ask` para
+  `statusLine` (apunta a `statusline.sh`), `voice` (hold-to-talk), tema y notificaciones. En `permissions`: `allow` para lectura, git, búsqueda y los MCP en uso; `ask` para
   `rm -rf`; y `deny` sobre `.env` y sobre los propios archivos de permisos, para que ningún agente
   pueda auto-concederse accesos.
 - **`settings.local.json`** — permisos de la máquina, sin secretos.
+- **`statusline.sh`** — la barra de estado, con un color por dato. Lo ejecuta Git Bash.
+
+  | Dato | Color |
+  |---|---|
+  | Carpeta del proyecto | Azul |
+  | Rama de git (`no git` fuera de un repo) | Verde |
+  | Modelo | Amarillo |
+  | Contexto usado | Verde hasta el 59 %, amarillo del 60 al 84 %, rojo desde el 85 % |
+
+  Los umbrales y los colores (códigos ANSI) están en las primeras líneas del script. Recibe por la
+  entrada estándar el JSON que le pasa Claude Code y lo lee con `grep`, sin depender de `jq`.
 
 Los permisos específicos de un proyecto **no van aquí**: viven en el `.claude/` de cada repo.
 
-Para restaurar en una máquina nueva: copiar ambos archivos a `~\.claude\` y revisar las rutas
+Para restaurar en una máquina nueva: copiar los tres archivos a `~\.claude\` y revisar las rutas
 absolutas de las reglas `deny`, que llevan el nombre de usuario dentro.
 
 ### Mapa de symlinks (referencia rápida)
