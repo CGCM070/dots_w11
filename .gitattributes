@@ -1,0 +1,2 @@
+# Los scripts de shell siempre con salto de linea LF: con CRLF, Git Bash no los ejecuta.
+*.sh text eol=lf
