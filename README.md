@@ -32,11 +32,12 @@ dots_w11/
 │       └── */Settings.json
 ├── windows-terminal/       # Windows Terminal
 │   └── settings.json
-├── powershell/             # PowerShell 7 profile + clipboard monitor
+├── powershell/             # PowerShell 7 profile
 │   └── Microsoft.PowerShell_profile.ps1
 ├── claude/                 # Claude Code CLI (respaldo, NO symlink)
 │   ├── settings.json
-│   └── settings.local.json
+│   ├── settings.local.json
+│   └── statusline.sh
 ├── bin/                    # Scripts utilitarios
 │   ├── dev-session.cmd
 │   └── link-wt.cmd
@@ -175,24 +176,10 @@ Tras instalar, PowerShell 7 aparece automáticamente como perfil en Windows Term
 #### Qué configura el perfil
 
 **PSReadLine** (módulo incluido en PS7, no requiere instalación):
-- Predicciones desde historial con vista de lista (`PredictionSource History`, `PredictionViewStyle ListView`)
+- Predicciones desde historial con vista de lista (`PredictionSource History`, `PredictionViewStyle ListView`). Solo se activan en una terminal interactiva: si PowerShell lo lanza otro programa (un script, un agente) con la salida redirigida, se saltan, porque ahí PSReadLine da error
 - Flechas arriba/abajo filtran historial por lo ya escrito (`HistorySearchBackward`/`HistorySearchForward`)
 - Tab despliega menú de opciones (`MenuComplete`)
 - Colores de sintaxis personalizados: comandos (amarillo), parámetros (gris), strings (verde), errores (rojo), comentarios (verde oscuro), keywords (cyan)
-
-**Clipboard Monitor** (notificación al copiar):
-- Muestra un toast oscuro semi-transparente ("Copiado ✓") en la esquina inferior derecha durante 1.5 segundos cada vez que el clipboard cambia
-- Usa la Win32 API `AddClipboardFormatListener` (event-driven, 0% CPU en reposo)
-- Corre en un runspace de fondo con thread STA (necesario para WinForms)
-- **Detecta cambios de clipboard a nivel de sistema** (no solo dentro de la terminal)
-- Dependencias: `System.Windows.Forms` y `System.Drawing` — ambas incluidas en el .NET Desktop Runtime que viene con PS7 en Windows, **no requiere instalar nada extra**
-- Para desactivar: eliminar el bloque entre `# Clipboard Monitor` y `# Fin Clipboard Monitor` en el perfil
-
-#### Notas técnicas
-
-- PS7 usa .NET 8+ internamente. La compilación C# en el perfil requiere resolver assemblies de forma dinámica (las DLLs están fraccionadas en .NET Core vs .NET Framework). El perfil lo maneja automáticamente buscando en el directorio de instalación de `pwsh`.
-- Si el clipboard monitor falla por cualquier razón, se captura silenciosamente (`try/catch`) y no afecta al funcionamiento normal de la terminal.
-- El monitor se inicia con `BeginInvoke()` (asíncrono) — no añade delay perceptible al arranque de la terminal.
 
 ### Claude Code
 
