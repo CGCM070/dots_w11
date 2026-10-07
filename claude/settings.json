@@ -16,7 +16,6 @@
       "Bash(find *)",
       "Bash(sed *)",
       "Bash(awk *)",
-      "Bash(xargs *)",
       "Bash(sort *)",
       "Bash(wc *)",
       "Bash(head *)",
@@ -73,22 +72,21 @@
       "mcp__trello__get_board_members",
       "mcp__trello__assign_member_to_card"
     ],
-    "ask": [
-      "Bash(rm -rf *)",
-      "Bash(rm -fr *)"
-    ],
     "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Edit(./.env)",
-      "Edit(./.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)",
       "Edit(//c/Users/cesar.castillo/.claude/settings.json)",
       "Edit(//c/Users/cesar.castillo/.claude/settings.local.json)",
       "Write(//c/Users/cesar.castillo/.claude/settings.json)",
       "Write(//c/Users/cesar.castillo/.claude/settings.local.json)"
+    ],
+    "ask": [
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)"
     ]
   },
-  "model": "claude-opus-4-8[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline.sh"
@@ -99,6 +97,11 @@
   },
   "language": "spanish",
   "effortLevel": "high",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    }
+  },
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
   "voice": {
@@ -107,8 +110,10 @@
   },
   "skipWorkflowUsageWarning": true,
   "theme": "auto",
+  "switchModelsOnFlag": false,
   "remoteControlAtStartup": false,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "model": "opus"
 }

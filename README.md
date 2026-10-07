@@ -219,6 +219,12 @@ permiso con "no preguntes más", así que un symlink metería ruido constante en
 
 Los permisos específicos de un proyecto **no van aquí**: viven en el `.claude/` de cada repo.
 
+El respaldo **no es una copia literal** del archivo vivo. Antes de copiarlo aquí se quitan:
+
+- el bloque `autoMode`, que describe el entorno de trabajo de la máquina (organización, repositorios y
+  servicios internos) y hay que escribirlo de nuevo en cada equipo;
+- los permisos que llevan direcciones IP de una red interna.
+
 Para restaurar en una máquina nueva: copiar los tres archivos a `~\.claude\` y revisar las rutas
 absolutas de las reglas `deny`, que llevan el nombre de usuario dentro.
 

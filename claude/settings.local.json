@@ -30,7 +30,8 @@
       "WebFetch(domain:www.ilunionconsultoria.com)",
       "WebFetch(domain:www.teams-pro.com)",
       "WebFetch(domain:docs.witivio.com)",
-      "mcp__trello__create_label"
+      "mcp__trello__create_label",
+      "WebFetch(domain:docs.claude.com)"
     ],
     "ask": [
       "Bash(winget install:*)"
