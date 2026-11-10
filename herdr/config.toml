@@ -1,0 +1,16 @@
+onboarding = false
+
+[ui]
+status_indicators = "dots"
+
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+[keys]
+prefix = ["ctrl+space", "backtick"]
+
+# Mover la tab activa: prefix + ← / →
+move_tab_previous = "prefix+left"
+move_tab_next = "prefix+right"
+

@@ -3,7 +3,7 @@
 > **AGENTES IA — LEER ANTES DE EDITAR CUALQUIER ARCHIVO**
 > Los archivos de este repositorio son la fuente de verdad, pero sus rutas de sistema (p.ej. `~\.glzr\glazewm\config.yaml`) son **symlinks creados con `mklink` de cmd** que apuntan aquí. Editar el destino del symlink edita este repo. Si encuentras un archivo fuera de `dots_w11/` que coincide con alguna entrada del [mapa de symlinks](#mapa-de-symlinks-referencia-rápida), **edita directamente el archivo dentro de `dots_w11/`**, no el destino enlazado. Nunca asumir que son copias independientes.
 
-Dotfiles para Windows 11. Contiene configuraciones de GlazeWM, Zebar, Neovim, Flow Launcher, Windows Terminal, PowerShell 7 y scripts utilitarios.
+Dotfiles para Windows 11. Contiene configuraciones de GlazeWM, Zebar, Neovim, Flow Launcher, Windows Terminal, PowerShell 7, herdr y scripts utilitarios.
 
 > **NOTA sobre Claude Code**: `claude/` es una **copia de respaldo, NO un symlink**. Los archivos vivos
 > (`~\.claude\settings.json`, `~\.claude\settings.local.json` y `~\.claude\statusline.sh`) son libres e independientes en cada máquina:
@@ -34,6 +34,8 @@ dots_w11/
 │   └── settings.json
 ├── powershell/             # PowerShell 7 profile
 │   └── Microsoft.PowerShell_profile.ps1
+├── herdr/                  # herdr (workspaces/tabs para agentes IA)
+│   └── config.toml
 ├── claude/                 # Claude Code CLI (respaldo, NO symlink)
 │   ├── settings.json
 │   ├── settings.local.json
@@ -61,6 +63,7 @@ El agente debe verificar que estén instalados antes de proceder:
 - [PowerShell 7](https://github.com/PowerShell/PowerShell) (`winget install Microsoft.PowerShell`) — ver [sección PowerShell 7](#powershell-7) para detalles
 - [Flow Launcher](https://www.flowlauncher.com/)
 - [Google Chrome](https://www.google.com/chrome/)
+- [herdr](https://herdr.dev/) (gestor de workspaces de terminal para agentes IA)
 
 ### Paso 1: Clonar el repositorio
 
@@ -76,6 +79,7 @@ mkdir %USERPROFILE%\.glzr\zebar 2>nul
 mkdir %USERPROFILE%\bin 2>nul
 mkdir %APPDATA%\FlowLauncher\Settings 2>nul
 mkdir %USERPROFILE%\Documents\PowerShell 2>nul
+mkdir %APPDATA%\herdr 2>nul
 ```
 
 > **NOTA**: No crear el directorio `%LOCALAPPDATA%\nvim` porque se linkeará como carpeta completa.
@@ -94,6 +98,7 @@ del %APPDATA%\FlowLauncher\Settings\Settings.json 2>nul
 rmdir /s /q %APPDATA%\FlowLauncher\Settings\Plugins 2>nul
 del %USERPROFILE%\bin\dev-session.cmd 2>nul
 del %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 2>nul
+del %APPDATA%\herdr\config.toml 2>nul
 :: Windows Terminal: cerrar WT antes de eliminar
 del "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" 2>nul
 ```
@@ -128,6 +133,9 @@ mklink %USERPROFILE%\bin\dev-session.cmd %DOTS%\bin\dev-session.cmd
 :: PowerShell 7 - perfil
 mklink %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 %DOTS%\powershell\Microsoft.PowerShell_profile.ps1
 
+:: herdr - config
+mklink %APPDATA%\herdr\config.toml %DOTS%\herdr\config.toml
+
 :: Windows Terminal - IMPORTANTE: cerrar WT antes de ejecutar este mklink
 mklink "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" "%DOTS%\windows-terminal\settings.json"
 :: Alternativamente ejecutar: bin\link-wt.cmd (recuerda cerrar WT primero)
@@ -143,6 +151,7 @@ dir %APPDATA%\FlowLauncher\Settings\Settings.json
 dir %APPDATA%\FlowLauncher\Settings\Plugins
 dir %USERPROFILE%\bin\dev-session.cmd
 dir %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+dir %APPDATA%\herdr\config.toml
 dir "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 ```
 
@@ -152,6 +161,7 @@ Cada archivo/carpeta debe mostrar `<SYMLINK>` o `<SYMLINKD>` en la salida.
 
 - **GlazeWM**: Pulsar `Alt+Shift+R` para recargar la config
 - **Flow Launcher**: Cerrar y reabrir (o `taskkill /IM Flow.Launcher.exe /F` y volver a lanzar)
+- **herdr**: `herdr server reload-config` (o `prefix + Shift+R` dentro de herdr)
 - **Neovim**: Abrir normalmente, lazy.nvim instalará los plugins automáticamente en el primer arranque
 
 ### PowerShell 7
@@ -180,6 +190,18 @@ Tras instalar, PowerShell 7 aparece automáticamente como perfil en Windows Term
 - Flechas arriba/abajo filtran historial por lo ya escrito (`HistorySearchBackward`/`HistorySearchForward`)
 - Tab despliega menú de opciones (`MenuComplete`)
 - Colores de sintaxis personalizados: comandos (amarillo), parámetros (gris), strings (verde), errores (rojo), comentarios (verde oscuro), keywords (cyan)
+
+### herdr
+
+`herdr/config.toml` es la configuración de [herdr](https://herdr.dev/). Lo que cambia respecto a los valores por defecto:
+
+| Ajuste | Valor |
+|---|---|
+| Tema | `catppuccin` |
+| Prefix | `Ctrl+Espacio` o `` ` `` (acento grave) |
+| Mover la tab activa a la izquierda / derecha | `prefix + ←` / `prefix + →` |
+
+Para ver todas las opciones: `herdr --default-config`. Para validar el archivo: `herdr config check`.
 
 ### Claude Code
 
@@ -228,6 +250,7 @@ absolutas de las reglas `deny`, que llevan el nombre de usuario dentro.
 | `flow-launcher/Plugins/`     | `%APPDATA%\FlowLauncher\Settings\Plugins\`       | Carpeta  | `mklink /D`    |
 | `bin/dev-session.cmd`        | `~\bin\dev-session.cmd`                          | Archivo  | `mklink`       |
 | `powershell/Microsoft.PowerShell_profile.ps1` | `~\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` | Archivo | `mklink` |
+| `herdr/config.toml`          | `%APPDATA%\herdr\config.toml`                   | Archivo  | `mklink`       |
 | `windows-terminal/settings.json` | `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json` | Archivo | `mklink` (cerrar WT antes) |
 
 ### Notas para el agente
